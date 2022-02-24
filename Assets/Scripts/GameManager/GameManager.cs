@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
 {
     public ProceduralSpawning Spawner;
 
+    public GameObject countdown;
+
+    public TextMeshProUGUI countdownText;
     int Maxdrones, MaxAngle, Maxhealth;
 
     float WaitTime, Maxspeed;
@@ -24,9 +27,11 @@ public class GameManager : MonoBehaviour
     public int MediumScore;
 
     public float timescale;
-    
+
+    private float counttime = 3;
     public TextMeshProUGUI scoreUI;
 
+    private bool countdownReady;
     bool Spawned;
 
     public ModuleSpawner moduleSpawner;
@@ -70,6 +75,9 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
+        GameObject countdown = GetComponent<GameObject>();
+        TextMeshProUGUI countdownText = GetComponent<TextMeshProUGUI>();
+
 
        Volume Post = GetComponent<Volume>();
 
@@ -118,6 +126,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        countdownTexter();
        timescale =  Time.timeScale;
         deathcheck();
         updatescore();
@@ -166,6 +176,19 @@ public class GameManager : MonoBehaviour
                 
 
 
+        }
+    }
+
+    private void countdownTexter()
+    {
+        if (countdownReady == true)
+        {
+            countdown.gameObject.SetActive(true);
+            countdownText.SetText(((int)(counttime - Time.unscaledTime)).ToString());
+        }
+        else if (countdownReady!=true)
+        {
+            countdown.SetActive(false);
         }
     }
 
@@ -389,8 +412,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator unpause()
     {
+        countdownReady = true;
         yield return new WaitForSecondsRealtime(3f);
         CurrentState = GameState.Play;
+        countdownReady = false;
     }
 
    public void reloadScene()
