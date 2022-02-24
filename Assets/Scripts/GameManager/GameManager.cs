@@ -127,10 +127,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
-        countdownTexter();
+       
        timescale =  Time.timeScale;
         deathcheck();
         updatescore();
+        //countdownTexter();
         switch (CurrentState)
         {
             case GameState.Countdown:
@@ -160,7 +161,14 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Pause:
-                
+                if (counttime > 0 && countdownReady)
+                {
+                    countdown.SetActive(true);
+                     
+            
+                    countdownText.SetText(((int)(counttime - Time.unscaledDeltaTime)).ToString());
+                }
+
                 break;
 
             case GameState.Cooldown:
@@ -184,10 +192,11 @@ public class GameManager : MonoBehaviour
         if (countdownReady == true)
         {
             countdown.gameObject.SetActive(true);
-            countdownText.SetText(((int)(counttime - Time.unscaledTime)).ToString());
+            countdownText.SetText(((counttime - Time.unscaledDeltaTime)).ToString());
         }
         else if (countdownReady!=true)
         {
+            counttime = 3f;
             countdown.SetActive(false);
         }
     }
@@ -412,9 +421,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator unpause()
     {
+       
+        
+        
         countdownReady = true;
         yield return new WaitForSecondsRealtime(3f);
+        countdown.SetActive(false);
         CurrentState = GameState.Play;
+        counttime = 3;
         countdownReady = false;
     }
 
