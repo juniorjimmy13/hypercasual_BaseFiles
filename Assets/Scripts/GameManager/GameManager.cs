@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -72,9 +73,11 @@ public class GameManager : MonoBehaviour
     public float vingettechange;
 
     public GameObject objective;
-    
+
+    private bool relaxing;
     private void Awake()
     {
+        relaxing = false;
         GameObject countdown = GetComponent<GameObject>();
         TextMeshProUGUI countdownText = GetComponent<TextMeshProUGUI>();
 
@@ -141,6 +144,8 @@ public class GameManager : MonoBehaviour
                 {
                     AudioManager.instance.Player.PlayOneShot(AudioManager.instance.Introsound);
                 }
+             
+                
                 StartCoroutine(Countdowntime());
                 OpenEyeEffect();
                 break;
@@ -148,6 +153,7 @@ public class GameManager : MonoBehaviour
             case GameState.Play:
                 Time.timeScale = 1;
                 Spawned = false;
+                counttime = 3;
                 CheckDronesinScene();
                 break;
 
@@ -166,7 +172,7 @@ public class GameManager : MonoBehaviour
                     countdown.SetActive(true);
                      
             
-                    countdownText.SetText(((int)(counttime - Time.unscaledDeltaTime)).ToString());
+                    countdownText.SetText(((int)(counttime -= Time.unscaledDeltaTime)).ToString());
                 }
 
                 break;
@@ -306,79 +312,92 @@ public class GameManager : MonoBehaviour
 
  private void DifficultyCheck()
     {
-        int Chance = UnityEngine.Random.Range(0, 10);
-
-        if (moduleSpawner.Hard_Mid_modules_row == 5)
+        if (!relaxing)
         {
+            int Chance = UnityEngine.Random.Range(0, 10);
+
+            if (moduleSpawner.Hard_Mid_modules_row == 5)
+            {
+                StartCoroutine(Relaxtime());
             
-            moduleSpawner.SpawnIntro();
-        }
-        else if (Runscore < IntroScore)
-        {
-            if (AudioManager.instance.Player.isPlaying == false)
-            {
-                AudioManager.instance.Player.PlayOneShot(AudioManager.instance.Introsound);
             }
+            else if (Runscore < IntroScore)
+            {
+                if (AudioManager.instance.Player.isPlaying == false)
+                {
+                    AudioManager.instance.Player.PlayOneShot(AudioManager.instance.Introsound);
+                }
 
-            moduleSpawner.SpawnIntro();
-        }
-        else if (Runscore < BeginnerScore)
-        {
-            if (AudioManager.instance.Player.isPlaying == true)
-            {
-                AudioManager.instance.Player.Stop();
-                AudioManager.instance.Player.PlayOneShot(AudioManager.instance.hype);
+                moduleSpawner.SpawnIntro();
             }
-            if (Chance < 2)
+            else if (Runscore < BeginnerScore)
             {
-                moduleSpawner.SpawnEasy();
+                if (AudioManager.instance.Player.isPlaying == true)
+                {
+                    AudioManager.instance.Player.Stop();
+                    AudioManager.instance.Player.PlayOneShot(AudioManager.instance.hype);
+                }
+                if (Chance < 2)
+                {
+                    moduleSpawner.SpawnEasy();
+                }
+                else if (Chance < 4)
+                {
+                    moduleSpawner.SpawnMedium();
+                }
+                else
+                {
+                    moduleSpawner.SpawnHard();
+                }
             }
-            else if (Chance < 4)
+            else if (Runscore < MediumScore)
             {
-                moduleSpawner.SpawnMedium();
-            }
-            else
-            {
-                moduleSpawner.SpawnHard();
-            }
-        }
-        else if (Runscore < MediumScore)
-        {
-            if (Chance < 2)
-            {
-                moduleSpawner.SpawnHard();
-            }
-            else if (Chance < 4)
-            {
-                moduleSpawner.SpawnEasy();
-            }
-            else
-            {
-                moduleSpawner.SpawnMedium();
-            }
+                if (Chance < 2)
+                {
+                    moduleSpawner.SpawnHard();
+                }
+                else if (Chance < 4)
+                {
+                    moduleSpawner.SpawnEasy();
+                }
+                else
+                {
+                    moduleSpawner.SpawnMedium();
+                }
            
-        }
-        else if (Runscore > MediumScore)
-        {
-            if (Chance < 2)
-            {
-                moduleSpawner.SpawnEasy();
             }
-            else if(Chance < 4)
+            else if (Runscore > MediumScore)
             {
-                moduleSpawner.SpawnMedium();
-            }
-            else
-            {
-                moduleSpawner.SpawnHard();
-            }
+                if (Chance < 2)
+                {
+                    moduleSpawner.SpawnEasy();
+                }
+                else if(Chance < 4)
+                {
+                    moduleSpawner.SpawnMedium();
+                }
+                else
+                {
+                    moduleSpawner.SpawnHard();
+                }
             
 
             
+            }
         }
+       
     }
 
-    private void HardValues()
+ private IEnumerator Relaxtime()
+ {
+      relaxing = true;
+     moduleSpawner.Hard_Mid_modules_row = 0;
+     yield return new WaitForSeconds(3);
+     relaxing = false;
+
+ }
+
+ private void HardValues()
     {
         Maxhealth = 3;
         Maxdrones = 6;
@@ -421,15 +440,12 @@ public class GameManager : MonoBehaviour
 
     IEnumerator unpause()
     {
-       
-        
-        
         countdownReady = true;
         yield return new WaitForSecondsRealtime(3f);
         countdown.SetActive(false);
         CurrentState = GameState.Play;
-        counttime = 3;
         countdownReady = false;
+        
     }
 
    public void reloadScene()
