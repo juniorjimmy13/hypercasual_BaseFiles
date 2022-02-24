@@ -47,7 +47,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3826399189732156561, guid: bea0a9e66f68ffd449df9242b3f6ee3c, type: 3}
       propertyPath: speed
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3826399189732156561, guid: bea0a9e66f68ffd449df9242b3f6ee3c, type: 3}
       propertyPath: localWaypoints.Array.size
@@ -161,7 +161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 247884666852592340, guid: 284a8e32df9156c478fa2bb79864f7cf, type: 3}
       propertyPath: speed
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 247884666852592340, guid: 284a8e32df9156c478fa2bb79864f7cf, type: 3}
       propertyPath: waitTime
@@ -263,7 +263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 889113319454596988, guid: 6a2a933b1a0918c4a822025fe940a2ec, type: 3}
       propertyPath: speed
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 889113319454596988, guid: 6a2a933b1a0918c4a822025fe940a2ec, type: 3}
       propertyPath: waitTime
