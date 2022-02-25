@@ -92,9 +92,9 @@ public class GameManager : MonoBehaviour
        
         ProceduralSpawning  Spawner = GetComponent<ProceduralSpawning>();
 
-      ModuleSpawner  moduleSpawner = GetComponent<ModuleSpawner>();
+        ModuleSpawner  moduleSpawner = GetComponent<ModuleSpawner>();
 
-      GameObject objective = GetComponent<GameObject>();
+        GameObject objective = GetComponent<GameObject>();
         PlayerHealth  playerhealth = GetComponent<PlayerHealth>();
 
         sortingstop = false;
@@ -352,6 +352,11 @@ public class GameManager : MonoBehaviour
             }
             else if (Runscore < MediumScore)
             {
+                if (AudioManager.instance.Player.isPlaying == true)
+                {
+                    AudioManager.instance.Player.Stop();
+                    AudioManager.instance.Player.PlayOneShot(AudioManager.instance.hype);
+                }
                 if (Chance < 2)
                 {
                     moduleSpawner.SpawnHard();
@@ -368,6 +373,11 @@ public class GameManager : MonoBehaviour
             }
             else if (Runscore > MediumScore)
             {
+                if (AudioManager.instance.Player.isPlaying == true)
+                {
+                    AudioManager.instance.Player.Stop();
+                    AudioManager.instance.Player.PlayOneShot(AudioManager.instance.hype);
+                }
                 if (Chance < 2)
                 {
                     moduleSpawner.SpawnEasy();
