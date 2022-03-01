@@ -33,6 +33,8 @@ public class VfxManager : MonoBehaviour
     public AudioClip Click;
 
     public AudioClip toggle;
+
+    public AudioClip sheildHit;
     private void Awake()
     {
 

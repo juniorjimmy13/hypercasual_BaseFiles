@@ -318,7 +318,17 @@ public class GameManager : MonoBehaviour
 
             if (moduleSpawner.Hard_Mid_modules_row == 5)
             {
-                StartCoroutine(Relaxtime());
+                int shouldI = Random.Range(0, 10);
+
+                if (shouldI < 4)
+                {
+                    moduleSpawner.spawnUltimate();
+                }
+                else
+                {
+                    StartCoroutine(Relaxtime());
+                }
+               
             
             }
             else if (Runscore < IntroScore)
